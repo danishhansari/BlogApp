@@ -1,6 +1,6 @@
 import { useState } from "react";
 import img from "../imgs/logo.png";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 const Navbar = () => {
   const [searchVisiblity, setSearchVisiblity] = useState(false);
   return (
@@ -46,6 +46,8 @@ const Navbar = () => {
           </Link>
         </div>
       </nav>
+
+      <Outlet />
     </>
   );
 };
