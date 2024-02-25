@@ -81,7 +81,6 @@ const userSchema = mongoose.Schema({
         ref: 'blogs',
         default: [],
     }
-
 }, 
 { 
     timestamps: {
