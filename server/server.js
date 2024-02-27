@@ -3,6 +3,7 @@ import env from "dotenv";
 import { connectDB } from "./db/index.js";
 import bcrypt from "bcrypt";
 
+import User from "./Schema/User.js";
 env.config({
   path: "./.env",
 });
@@ -39,6 +40,22 @@ app.post("/signup", (req, res) => {
         "Password should be 6 to 20 character password long with a numeric, 1 lowercase and 1 uppercase letter",
     });
   }
-
-  return res.status(200).json("status: Okay");
+  let hash;
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
+    const username = email.split("@")[0];
+    console.log(hashedPassword);
+    hash = hashedPassword;
+    const user = new User({
+      personal_info: { fullname, email, password: hashedPassword, username },
+    });
+    user
+      .save()
+      .then((u) => {
+        return res.status(200).json({ user: u });
+      })
+      .catch((err) => {
+        return res.status(500).json("Internal Server Error");
+      });
+  });
+  // return res.status(200).json("status: Okay");
 });
