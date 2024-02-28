@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     const connectionInstances = await mongoose.connect(
-      `${process.env.MONGO_DB_URL}/blog`,
+      `${process.env.DATABASE_URL}/blog`,
       { autoIndex: true }
     );
     console.log(
