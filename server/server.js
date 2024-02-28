@@ -4,6 +4,7 @@ import { connectDB } from "./db/index.js";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
+import cors from "cors";
 
 import User from "./Schema/User.js";
 env.config({
@@ -15,6 +16,7 @@ const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 const PORT = process.env.PORT || 8000;
 app.use(json());
+app.use(cors());
 
 const formatDataToSend = (user) => {
   const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_ACCESS_KEY);
@@ -92,7 +94,7 @@ app.post("/signin", async (req, res) => {
     .then((user) => {
       console.log(user);
       if (!user) {
-        return res.status(403).json({ "error": "Email not found" });
+        return res.status(403).json({ error: "Email not found" });
       }
       bcrypt.compare(password, user.personal_info.password, (err, result) => {
         if (err) {

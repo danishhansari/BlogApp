@@ -2,20 +2,72 @@ import AnimationWrapper from "../common/page-animation.jsx";
 import InputBox from "../components/input.component.jsx";
 import googleImg from "../imgs/google.png";
 import { Link } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
+import axios from "axios";
+import { storeInSession } from "../common/session.jsx";
+
 const UserAuthForm = ({ type }) => {
+  const userAuthThroughServer = (serverRoute, formData) => {
+    axios
+      .post(import.meta.env.VITE_SERVER_LOCATION + serverRoute, formData)
+      .then(({ data }) => {
+        storeInSession("user", JSON.stringify(data));
+        toast.success("authentication successful");
+      })
+      .catch(({ response }) => {
+        console.log(response);
+        return toast.error(response.data.error);
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    let serverRoute = type === "sign-in" ? "signin" : "signup";
+
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+
+    let form = new FormData(formElement);
+    let formData = {};
+
+    for (let [key, value] of form.entries()) {
+      formData[key] = value;
+    }
+    console.log(formData);
+    let { fullname, email, password } = formData;
+
+    if (fullname && fullname.length < 3) {
+      return toast.error("Name must be at least 3 letters long");
+    }
+    if (!email.length) {
+      return toast.error("Email cannot be empty");
+    }
+    if (!emailRegex.test(email)) {
+      return toast.error("Email is invalid");
+    }
+    if (!passwordRegex.test(password)) {
+      return toast.error(
+        "Password should be 6 to 20 character password long with a numeric, 1 lowercase and 1 uppercase letter"
+      );
+    }
+    userAuthThroughServer(serverRoute, formData);
+  };
   return (
     <>
       <AnimationWrapper keyValue={type}>
+        <Toaster position="top-center" />
         <section className="h-cover flex items-center justify-center">
-          <form className="w-[80%] max-w-[400px]">
+          <form id="formElement" className="w-[80%] max-w-[400px]">
             <h1 className="text-4xl font-gelasio capitalize text-center mb-24">
               {type === "sign-in" ? "Welcome back" : "Join us today"}
             </h1>
             {type !== "sign-in" ? (
               <InputBox
                 type="text"
+                name="fullname"
                 placeholder="Full Name"
-                id="fullName"
+                id="fullname"
                 icon="fi fi-rr-user"
               />
             ) : (
@@ -36,11 +88,15 @@ const UserAuthForm = ({ type }) => {
               icon="fi-rr-key"
             />
 
-            <button className="btn-dark center" type="submit">
+            <button
+              onClick={handleSubmit}
+              className="btn-dark center"
+              type="submit"
+            >
               {type.replace("-", " ")}
             </button>
 
-            <div className="relative w-full items-center gap-2 my-10 opacity-10 uppercase text-black font-bold">
+            <div className="relative w-full items-center gap-2 my-10 opacity-10 uppercase text-black font-bold flex">
               <hr className="w-1/2 border-black" />
               <p>or</p>
               <hr className="w-1/2 border-black" />
