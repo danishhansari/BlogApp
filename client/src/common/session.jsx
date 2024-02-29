@@ -1,14 +1,11 @@
-const storeInSession = (key) => {
-  return sessionStorage.setItem(key);
+const storeInSession = (key, value) => {
+  return sessionStorage.setItem(key, value);
 };
 const lookInSession = (key) => {
   return sessionStorage.getItem(key);
 };
-const deleteSession = (key) => {
+const removeSession = (key) => {
   return sessionStorage.removeItem(key);
 };
-const logOutUser = () => {
-  return sessionStorage.clear();
-};
 
-export {storeInSession, lookInSession, deleteSession, logOutUser}
+export { storeInSession, lookInSession, removeSession};
