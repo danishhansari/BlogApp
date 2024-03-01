@@ -64,6 +64,11 @@ const UserAuthForm = ({ type }) => {
     }
     userAuthThroughServer(serverRoute, formData);
   };
+
+  const handleGoogleAuth = (e) => {
+    e.preventDefault();
+    toast.error("Please use email and password to login");
+  };
   return accessToken ? (
     <Navigate to={"/"} />
   ) : (
@@ -113,7 +118,10 @@ const UserAuthForm = ({ type }) => {
             <p>or</p>
             <hr className="w-1/2 border-black" />
           </div>
-          <button className="btn-dark flex items-center justify-center gap-4 w-[90%] center">
+          <button
+            className="btn-dark flex items-center justify-center gap-4 w-[90%] center"
+            onClick={handleGoogleAuth}
+          >
             <img src={googleImg} alt="google" className="w-5" />
             continue with google
           </button>
