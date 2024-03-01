@@ -49,6 +49,10 @@ connectDB()
     console.log("MongoDB failed to connected", err.message);
   });
 
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
+
 app.post("/signup", (req, res) => {
   const { fullname, email, password } = req.body;
   if (fullname.length < 3) {
