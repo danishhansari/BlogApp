@@ -5,7 +5,6 @@ import { UserContext } from "../App";
 import UserNavigation from "./user-navigation.component";
 const Navbar = () => {
   const {
-    userAuth,
     userAuth: { accessToken, profile_img },
   } = useContext(UserContext);
   const [userNavPanel, setUserNavPanel] = useState(false);

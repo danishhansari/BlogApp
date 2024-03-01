@@ -19,7 +19,7 @@ const UserNavigation = () => {
         transition={{ duration: 0.3 }}
         className={"absolute top-20 right-0 z-10"}
       >
-        <div className="bg-white absolute right-0 border-grey w-60 duration-200 md:hidden">
+        <div className="bg-white absolute right-0 md:right-8 border-grey w-60 duration-200">
           <Link to="/editor" className="flex gap-2 link pl-8 py-4">
             <i className="fi fi-rr-file-edit"></i>
             <p>Write</p>
@@ -40,7 +40,7 @@ const UserNavigation = () => {
             className="text-left p-4 hover:bg-grey w-full pl-8 py-4"
             onClick={signinOutUser}
           >
-            <h1 className="font-bold text-xl mb-1">Sign Out</h1>
+            <p className="font-bold text-xl mb-1">Sign Out</p>
             <p className="text-dark-grey">@{username}</p>
           </button>
         </div>
