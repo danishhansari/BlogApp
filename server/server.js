@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
 import cors from "cors";
+import aws from "aws-sdk";
 
 import User from "./Schema/User.js";
 env.config({
@@ -48,6 +49,12 @@ connectDB()
   .catch((err) => {
     console.log("MongoDB failed to connected", err.message);
   });
+
+const s3 = new aws.S3({
+  region: "ap-south-1",
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World");
