@@ -21,8 +21,12 @@ const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 const PORT = process.env.PORT || 8000;
 
 app.use(json());
-app.use(cors());
-
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
 const formatDataToSend = (user) => {
   const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_ACCESS_KEY);
   return {

@@ -1,18 +1,18 @@
 
-POST http://localhost:8000/signup
-Content-Type: application/json
+# POST http://localhost:8000/signup
+# Content-Type: application/json
 
-{
-    "fullname":"Ansari Danish",
-    "email": "dat@kkki.com", 
-    "password": "Indian@123"
-}
+# {
+#     "fullname":"Ansari Danish",
+#     "email": "dat@kkki.com", 
+#     "password": "Indian@123"
+# }
 
 POST http://localhost:8000/signin
 Content-Type: application/json
 
 {
-    "email": "dat@fi.com", 
+    "email": "dan72mail@gmail.com", 
     "password": "Indian@123"
 }
 
