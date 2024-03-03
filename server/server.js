@@ -8,14 +8,18 @@ import cors from "cors";
 import aws from "aws-sdk";
 
 import User from "./Schema/User.js";
+
 env.config({
   path: "./.env",
 });
 
 const app = express();
+
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+
 const PORT = process.env.PORT || 8000;
+
 app.use(json());
 app.use(cors());
 
@@ -27,6 +31,24 @@ const formatDataToSend = (user) => {
     username: user.personal_info.username,
     profile_img: user.personal_info.profile_img,
   };
+};
+
+const s3 = new aws.S3({
+  region: "ap-south-1",
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+const generateUploadURL = async () => {
+  const date = new Date();
+  const imageName = `${nanoid()}-${date.getTime()}.jpeg`;
+
+  return await s3.getSignedUrlPromise("putObject", {
+    Bucket: "blog-aapp",
+    Key: imageName,
+    Expires: 1000,
+    ContentType: "image/jpg",
+  });
 };
 
 const generateUser = async (email) => {
@@ -49,12 +71,6 @@ connectDB()
   .catch((err) => {
     console.log("MongoDB failed to connected", err.message);
   });
-
-const s3 = new aws.S3({
-  region: "ap-south-1",
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-});
 
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -123,5 +139,13 @@ app.post("/signin", async (req, res) => {
     .catch((err) => {
       console.log(err.message);
       return res.status(500).json("Internal Server Error");
+    });
+});
+
+app.get("/get-upload-url", (req, res) => {
+  generateUploadURL()
+    .then((url) => res.status(200).json({ uploadUrl: url }))
+    .catch((err) => {
+      console.log(err.message);
     });
 });
