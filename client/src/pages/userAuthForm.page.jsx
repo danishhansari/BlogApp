@@ -18,7 +18,7 @@ const UserAuthForm = ({ type }) => {
 
   const userAuthThroughServer = (serverRoute, formData) => {
     axios
-      .post(`api/${serverRoute}`, formData)
+      .post(`${import.meta.env.VITE_SERVER_LOCATION}${serverRoute}`, formData)
       .then(({ data }) => {
         storeInSession("user", JSON.stringify(data));
         console.log(data);
@@ -34,7 +34,7 @@ const UserAuthForm = ({ type }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    let serverRoute = type === "sign-in" ? "signin" : "signup";
+    let serverRoute = type === "sign-in" ? "/signin" : "/signup";
 
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;

@@ -3,7 +3,7 @@ const uploadImage = async (image) => {
   let imgURL = null;
 
   await axios
-    .get(`/api/get-upload-url`)
+    .get(`${import.meta.env.VITE_SERVER_LOCATION}/get-upload-url`)
     .then(async ({ data: { uploadUrl } }) => {
       await axios({
         method: "PUT",
@@ -13,6 +13,7 @@ const uploadImage = async (image) => {
       }).then(() => (imgURL = uploadUrl.split("?")[0]));
     })
     .catch((err) => {
+      console.log(err);
       console.log(err.message);
     });
 
