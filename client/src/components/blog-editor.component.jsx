@@ -3,9 +3,12 @@ import logo from "../imgs/logo.png";
 import AnimationWrapper from "../common/page-animation";
 import blogBanner from "../imgs/blog-banner.png";
 import { uploadImage } from "../common/aws.jsx";
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { EditorContext } from "../pages/editor.pages.jsx";
+import { tools } from "./tools.component";
+
+import EditorJS from "@editorjs/editorjs";
 
 const BlogEditor = () => {
   const {
@@ -15,8 +18,6 @@ const BlogEditor = () => {
     editorState,
     setEditorState,
   } = useContext(EditorContext);
-
-  console.log(blog);
 
   const handleBannerUpload = (e) => {
     let img = e.target.files[0]; // Get the selected image from the input element.
@@ -51,6 +52,15 @@ const BlogEditor = () => {
     input.style.height = input.scrollHeight + "px";
     setBlog({ ...blog, title: input.value });
   };
+
+  useEffect(() => {
+    const editor = new EditorJS({
+      holder: "textEditor",
+      data: "",
+      tools: tools,
+      placeholder: "Lets write a awesome story",
+    });
+  }, []);
 
   return (
     <>
@@ -96,6 +106,8 @@ const BlogEditor = () => {
             ></textarea>
 
             <hr className="w-full opacity-10 my" />
+
+            <div id="textEditor" className="font-gelasio"></div>
           </div>
         </section>
       </AnimationWrapper>
