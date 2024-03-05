@@ -11,12 +11,25 @@ import { tools } from "./tools.component";
 import EditorJS from "@editorjs/editorjs";
 
 const BlogEditor = () => {
+  useEffect(() => {
+    setTextEditor(
+      new EditorJS({
+        holder: "textEditor",
+        data: "",
+        tools: tools,
+        placeholder: "Lets write a awesome story",
+      })
+    );
+  }, []);
+
   const {
     blog,
     blog: { title, banner, content, tags, description },
     setBlog,
     editorState,
     setEditorState,
+    textEditor,
+    setTextEditor,
   } = useContext(EditorContext);
 
   const handleBannerUpload = (e) => {
@@ -53,14 +66,30 @@ const BlogEditor = () => {
     setBlog({ ...blog, title: input.value });
   };
 
-  useEffect(() => {
-    const editor = new EditorJS({
-      holder: "textEditor",
-      data: "",
-      tools: tools,
-      placeholder: "Lets write a awesome story",
-    });
-  }, []);
+  const handlePublishEvent = () => {
+    if (!banner.length) {
+      return toast.error("Upload a blog banner to publish it...");
+    }
+    if (!title.length) {
+      return toast.error("Write blog title to publish it");
+    }
+    if (textEditor.isReady) {
+      textEditor
+        .save()
+        .then((data) => {
+          if (data.blocks.length) {
+            setBlog({ ...blog, content: data });
+            setEditorState("publish");
+          } else {
+            return toast.error("Write something in your blog to publish it");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(err.message);
+        });
+    }
+  };
 
   return (
     <>
@@ -72,7 +101,9 @@ const BlogEditor = () => {
           {title.length ? title : "New Blog"}
         </p>
         <div className="flex gap-4 ml-auto">
-          <button className="btn-dark py-2">Publish</button>
+          <button className="btn-dark py-2" onClick={handlePublishEvent}>
+            Publish
+          </button>
           <button className="btn-light py-2">Save Draft</button>
         </div>
       </nav>

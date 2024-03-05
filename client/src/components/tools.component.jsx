@@ -9,22 +9,20 @@ import InlineCode from "@editorjs/inline-code";
 
 import { uploadImage } from "../common/aws";
 
-const uploadImageByURL = async (e) => {
-  // let link = new Promise((resolve, reject) => {
-  //   try {
-  //     resolve(e);
-  //   } catch (err) {
-  //     reject(err.message);
-  //   }
-  // });
-  // return await link.then((url) => {
-  //   return {
-  //     success: 1,
-  //     file: { url },
-  //   };
-  // });
-
-  console.log(e);
+const uploadImageByURL = (e) => {
+  let link = new Promise((resolve, reject) => {
+    try {
+      resolve(e);
+    } catch (err) {
+      reject(err);
+    }
+  });
+  return link.then((url) => {
+    return {
+      success: 1,
+      file: { url },
+    };
+  });
 };
 
 const uploadImageByFile = async (e) => {
@@ -48,7 +46,7 @@ export const tools = {
     class: ImageTool,
     config: {
       uploader: {
-        imageUploadByUrl: uploadImageByURL,
+        uploadByUrl: uploadImageByURL,
         uploadByFile: uploadImageByFile,
       },
     },
