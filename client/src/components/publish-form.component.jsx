@@ -14,6 +14,7 @@ const PublistForm = () => {
     setBlog,
     blog,
   } = useContext(EditorContext);
+
   const handleCloseEvent = () => {
     setEditorState("editor");
   };
@@ -42,6 +43,8 @@ const PublistForm = () => {
         if (!tags.includes(tag) && tag.length) {
           setBlog({ ...blog, tags: [...tags, tag] });
         }
+      } else {
+        toast.error(`You can add max ${tagLimit} character`);
       }
       e.target.value = "";
     }
@@ -113,9 +116,14 @@ const PublistForm = () => {
                 className="sticky input-box bg-white top-0 left-0 pl-4 mb-3 focus:bg-white"
               />
               {tags.map((tag, i) => {
-                <Tag tag={tag} key={i} />;
+                return <Tag tag={tag} tagIndex={i} key={i} />;
               })}
             </div>
+            <p className="mt-1 mb-4 text-dark-grey text-right">
+              {tagLimit - tags.length} Tags left
+            </p>
+
+            <button className="btn-dark px-8">Publish</button>
           </div>
         </section>
       </AnimationWrapper>
