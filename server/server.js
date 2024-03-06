@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import aws from "aws-sdk";
+import Blog from "./Schema/Blog.js";
 
 import User from "./Schema/User.js";
 
@@ -27,6 +28,23 @@ app.use(
     credentials: true,
   })
 );
+
+const verifyJWT = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (token === null) {
+    res.status(403).json({ error: "No access token" });
+  }
+  jwt.verify(token, process.env.SECRET_ACCESS_KEY, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: "Access token is invalid" });
+    }
+    req.user = user.id;
+    next();
+  });
+};
+
 const formatDataToSend = (user) => {
   const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_ACCESS_KEY);
   return {
@@ -45,7 +63,7 @@ const s3 = new aws.S3({
 
 const generateUploadURL = async () => {
   const date = new Date();
-  const imageName = `${nanoid()}-${date.getTime()}.jpeg`;
+  const imageName = `${nanoid()}.jpeg`;
 
   return await s3.getSignedUrlPromise("putObject", {
     Bucket: "blog-aapp",
@@ -82,6 +100,8 @@ app.get("/", (req, res) => {
 
 app.post("/signup", (req, res) => {
   const { fullname, email, password } = req.body;
+  console.log(fullname, email, password);
+
   if (fullname.length < 3) {
     return res.status(403).json("FullName must be at least 3 letters long");
   }
@@ -151,5 +171,84 @@ app.get("/get-upload-url", (req, res) => {
     .then((url) => res.status(200).json({ uploadUrl: url }))
     .catch((err) => {
       console.log(err.message);
+    });
+});
+
+app.post("/create-blog", verifyJWT, (req, res) => {
+  const authorId = req.user;
+  let { title, banner, content, tags, description, draft } = req.body;
+
+  if (!title.length) {
+    return res
+      .status(403)
+      .json({ error: "You must provide a title to publish the blog" });
+  }
+
+  if (!description || description.length > 200) {
+    return res.status(403).json({
+      error: "You must provide blog description under 200 characters",
+    });
+  }
+
+  if (!banner) {
+    return res
+      .status(403)
+      .json({ error: "You must provide blog banner to publish it" });
+  }
+
+  if (!content.blocks.length) {
+    return res
+      .status(403)
+      .json({ error: "There must be some blog content to publish it" });
+  }
+
+  if (!tags.length || tags.length > 10) {
+    return res
+      .status(403)
+      .json({ error: "Provide tags in order to publish the blog, Maximum 10" });
+  }
+
+  tags = tags.map((tag) => tag.toLowerCase());
+
+  const blog_id =
+    title
+      .replace(/[^a-zA-Z0-9]/g, " ")
+      .replace(/\s+/g, "-")
+      .trim() +
+    "-" +
+    nanoid();
+
+  const blog = new Blog({
+    title,
+    description,
+    author: authorId,
+    blog_id,
+    content,
+    tags,
+    draft: Boolean(draft),
+  });
+
+  blog
+    .save()
+    .then((blog) => {
+      let increment = draft ? 0 : 1;
+      User.findOneAndUpdate(
+        { _id: authorId },
+        {
+          $inc: { "account_info.total_posts": increment },
+          $push: { blogs: blog._id },
+        }
+      )
+        .then((user) => {
+          return res.status(200).json({ id: blog.blog_id });
+        })
+        .catch((err) => {
+          return res
+            .status(500)
+            .json({ error: "Failed to update total posts number" });
+        });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
     });
 });
