@@ -181,31 +181,35 @@ app.post("/create-blog", verifyJWT, (req, res) => {
   if (!title.length) {
     return res
       .status(403)
-      .json({ error: "You must provide a title to publish the blog" });
+      .json({ error: "You must provide a title" });
   }
 
-  if (!description || description.length > 200) {
-    return res.status(403).json({
-      error: "You must provide blog description under 200 characters",
-    });
-  }
+  if (!draft) {
+    if (!description || description.length > 200) {
+      return res.status(403).json({
+        error: "You must provide blog description under 200 characters",
+      });
+    }
 
-  if (!banner) {
-    return res
-      .status(403)
-      .json({ error: "You must provide blog banner to publish it" });
-  }
+    if (!banner) {
+      return res
+        .status(403)
+        .json({ error: "You must provide blog banner to publish it" });
+    }
 
-  if (!content.blocks.length) {
-    return res
-      .status(403)
-      .json({ error: "There must be some blog content to publish it" });
-  }
+    if (!content.blocks.length) {
+      return res
+        .status(403)
+        .json({ error: "There must be some blog content to publish it" });
+    }
 
-  if (!tags.length || tags.length > 10) {
-    return res
-      .status(403)
-      .json({ error: "Provide tags in order to publish the blog, Maximum 10" });
+    if (!tags.length || tags.length > 10) {
+      return res
+        .status(403)
+        .json({
+          error: "Provide tags in order to publish the blog, Maximum 10",
+        });
+    }
   }
 
   tags = tags.map((tag) => tag.toLowerCase());
@@ -243,11 +247,9 @@ app.post("/create-blog", verifyJWT, (req, res) => {
           return res.status(200).json({ id: blog.blog_id });
         })
         .catch((err) => {
-          return res
-            .status(500)
-            .json({
-              error: `Failed to update total posts number ${err.message}`,
-            });
+          return res.status(500).json({
+            error: `Failed to update total posts number ${err.message}`,
+          });
         });
     })
     .catch((err) => {

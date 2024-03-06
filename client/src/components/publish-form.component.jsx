@@ -42,7 +42,7 @@ const PublishForm = () => {
 
     let loading = toast.loading("Publishing...");
 
-    e.target.classList.add("disabled");
+    e.target.classList.add("disable");
 
     const blogObj = {
       title,
