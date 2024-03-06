@@ -245,7 +245,9 @@ app.post("/create-blog", verifyJWT, (req, res) => {
         .catch((err) => {
           return res
             .status(500)
-            .json({ error: "Failed to update total posts number" });
+            .json({
+              error: `Failed to update total posts number ${err.message}`,
+            });
         });
     })
     .catch((err) => {

@@ -26,7 +26,6 @@ const BlogEditor = () => {
     blog,
     blog: { title, banner, content, tags, description },
     setBlog,
-    editorState,
     setEditorState,
     textEditor,
     setTextEditor,
