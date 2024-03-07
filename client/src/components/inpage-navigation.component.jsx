@@ -4,6 +4,7 @@ const InPageNavigation = ({
   routes,
   defaultHidden = [],
   defaultActiveIndex = 0,
+  children,
 }) => {
   useEffect(() => {
     changePageState(activeTabRef.current, defaultActiveIndex);
@@ -32,7 +33,7 @@ const InPageNavigation = ({
               key={i}
               className={`px-5 p-4 capitalize ${
                 inPageNavIndex === i ? "text-black" : "text-dark-grey"
-              } ${defaultHidden.includes(route) ? "mb-hidden" : ""}`}
+              } ${defaultHidden.includes(route) ? "md:hidden " : ""}`}
               onClick={(e) => changePageState(e.target, i)}
             >
               {route}
@@ -42,6 +43,7 @@ const InPageNavigation = ({
 
         <hr ref={activeTabLineRef} className="absolute bottom-0 duration-300" />
       </div>
+      {Array.isArray(children) ? children[inPageNavIndex] : children}
     </>
   );
 };
