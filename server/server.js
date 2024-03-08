@@ -179,7 +179,7 @@ app.get("/latest-blogs", (req, res) => {
   Blog.find({ draft: false })
     .populate(
       "author",
-      "personal_info.profile_img personal_info.fullname profile_info.username -_id"
+      "personal_info.profile_img personal_info.fullname personal_info.username -_id"
     )
     .sort({ publishedAt: -1 })
     .select("blog_id title description banner activity tags publishedAt -_id ")
