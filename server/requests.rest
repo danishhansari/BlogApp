@@ -25,10 +25,12 @@
 
 
 
-POST http://localhost:8000/create-blog
-Content-Type: "application/json"
-Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTg4Y2IyMDAxM2QwOGRlNzUyMzNlOSIsImlhdCI6MTcwOTczOTE4Nn0.XsmrVojAlmf7G97p7PRYAwgdMoUtAcXDZ_L90FFMwDA"
+# POST http://localhost:8000/create-blog
+# Content-Type: "application/json"
+# Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTg4Y2IyMDAxM2QwOGRlNzUyMzNlOSIsImlhdCI6MTcwOTczOTE4Nn0.XsmrVojAlmf7G97p7PRYAwgdMoUtAcXDZ_L90FFMwDA"
 
-{
-    "blog-name":"this is blog",
-}
+# {
+#     "blog-name":"this is blog",
+# }
+
+GET http://localhost:8000/latest-blogs

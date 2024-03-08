@@ -174,14 +174,30 @@ app.get("/get-upload-url", (req, res) => {
     });
 });
 
+app.get("/latest-blogs", (req, res) => {
+  let maxLimit = 5;
+  Blog.find({ draft: false })
+    .populate(
+      "author",
+      "personal_info.profile_img personal_info.fullname profile_info.username -_id"
+    )
+    .sort({ publishedAt: -1 })
+    .select("blog_id title description banner activity tags publishedAt -_id ")
+    .limit(maxLimit)
+    .then((data) => {
+      return res.status(200).json({ blogs: data });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
 app.post("/create-blog", verifyJWT, (req, res) => {
   const authorId = req.user;
   let { title, banner, content, tags, description, draft } = req.body;
 
   if (!title.length) {
-    return res
-      .status(403)
-      .json({ error: "You must provide a title" });
+    return res.status(403).json({ error: "You must provide a title" });
   }
 
   if (!draft) {
@@ -204,11 +220,9 @@ app.post("/create-blog", verifyJWT, (req, res) => {
     }
 
     if (!tags.length || tags.length > 10) {
-      return res
-        .status(403)
-        .json({
-          error: "Provide tags in order to publish the blog, Maximum 10",
-        });
+      return res.status(403).json({
+        error: "Provide tags in order to publish the blog, Maximum 10",
+      });
     }
   }
 
