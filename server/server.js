@@ -192,6 +192,27 @@ app.get("/latest-blogs", (req, res) => {
     });
 });
 
+app.get("/trending-blogs", (req, res) => {
+  Blog.find({ draft: false })
+    .populate(
+      "author",
+      "personal_info.profile_img personal_info.fullname personal_info.username -_id"
+    )
+    .sort({
+      "activity.total_read": -1,
+      "activity.total_likes": -1,
+      publishedAt: -1,
+    })
+    .select("blog_id title publishedAt -_id")
+    .limit(5)
+    .then((blogs) => {
+      return res.status(200).json({ blogs });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
 app.post("/create-blog", verifyJWT, (req, res) => {
   const authorId = req.user;
   let { title, banner, content, tags, description, draft } = req.body;

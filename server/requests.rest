@@ -33,4 +33,6 @@
 #     "blog-name":"this is blog",
 # }
 
-GET http://localhost:8000/latest-blogs
+# GET http://localhost:8000/latest-blogs
+
+GET http://localhost:8000/trending-blogs
