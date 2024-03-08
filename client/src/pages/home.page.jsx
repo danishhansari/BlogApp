@@ -6,13 +6,14 @@ import Loader from "../components/loader.component";
 import BlogPostCard from "../components/blog-post.component";
 import MinimalBlogPost from "../components/nobanner-blog-post.component";
 import { activeTabRef } from "../components/inpage-navigation.component";
+import NoDataMessage from "../components/nodata.component";
 
 const HomePage = () => {
   const [blogs, setBlogs] = useState(null);
   const [trendingBlogs, setTrendingBlogs] = useState(null);
   const [pageState, setPageState] = useState("home");
 
-  const categories = ["nodejs", "aws", "productivity", "tech"];
+  const categories = ["nodejs", "aws", "notion", "productivity", "tech"];
 
   const fetchLatestBlog = () => {
     console.log(`${import.meta.env.VITE_SERVER_LOCATION}/latest-blogs`);
@@ -81,7 +82,7 @@ const HomePage = () => {
               <>
                 {blogs === null ? (
                   <Loader />
-                ) : (
+                ) : blogs.length ? (
                   blogs.map((blog, i) => {
                     return (
                       <AnimationWrapper
@@ -95,6 +96,8 @@ const HomePage = () => {
                       </AnimationWrapper>
                     );
                   })
+                ) : (
+                  <NoDataMessage message="No blogs published" />
                 )}
               </>
 
@@ -150,7 +153,7 @@ const HomePage = () => {
 
                 {trendingBlogs === null ? (
                   <Loader />
-                ) : (
+                ) : trendingBlogs.length ? (
                   trendingBlogs.map((trendingBlog, i) => {
                     return (
                       <AnimationWrapper
@@ -161,6 +164,8 @@ const HomePage = () => {
                       </AnimationWrapper>
                     );
                   })
+                ) : (
+                  <NoDataMessage message="No trending data found" />
                 )}
               </div>
             </div>
