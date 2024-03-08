@@ -262,7 +262,7 @@ app.post("/create-blog", verifyJWT, (req, res) => {
     description,
     author: authorId,
     blog_id,
-    content, 
+    content,
     banner,
     tags,
     draft: Boolean(draft),
@@ -287,6 +287,30 @@ app.post("/create-blog", verifyJWT, (req, res) => {
             error: `Failed to update total posts number ${err.message}`,
           });
         });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+app.post("/search-blogs", (req, res) => {
+  const { tag } = req.body;
+
+  const findQuery = { tags: tag, draft: false };
+
+  let maxLimit = 5;
+
+  Blog.find(findQuery)
+    .populate(
+      "author",
+      "personal_info.profile_img personal_info.fullname personal_info.username -_id"
+    )
+    .sort({ publishedAt: -1 })
+    .select("blog_id title description banner activity tags publishedAt -_id ")
+    .limit(maxLimit)
+    .then((data) => {
+      console.log(data);
+      return res.status(200).json({ blogs: data });
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });

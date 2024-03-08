@@ -35,4 +35,12 @@
 
 # GET http://localhost:8000/latest-blogs
 
-GET http://localhost:8000/trending-blogs
+# GET http://localhost:8000/trending-blogs
+
+
+POST http://localhost:8000/search-blogs
+Content-Type: "application/json"
+
+{
+    "tag": "aws"
+}
