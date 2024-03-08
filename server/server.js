@@ -262,7 +262,8 @@ app.post("/create-blog", verifyJWT, (req, res) => {
     description,
     author: authorId,
     blog_id,
-    content, banner
+    content, 
+    banner,
     tags,
     draft: Boolean(draft),
   });
