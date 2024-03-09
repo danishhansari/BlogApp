@@ -58,7 +58,7 @@ const formatDataToSend = (user) => {
 const s3 = new aws.S3({
   region: "ap-south-1",
   accessKeyId: process.env.AWS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_KEY,
+  secretAccessKey: process.env.AWS_SECRET,
 });
 
 const generateUploadURL = async () => {
