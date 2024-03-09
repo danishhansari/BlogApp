@@ -1,0 +1,16 @@
+{
+  "name": "blog-app-ttqy",
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/" }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
