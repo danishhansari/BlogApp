@@ -36,7 +36,7 @@ const verifyJWT = (req, res, next) => {
   if (token === null) {
     res.status(403).json({ error: "No access token" });
   }
-  jwt.verify(token, process.env.SECRET_ACCESS_KEY, (err, user) => {
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if (err) {
       return res.status(403).json({ error: "Access token is invalid" });
     }
@@ -46,7 +46,7 @@ const verifyJWT = (req, res, next) => {
 };
 
 const formatDataToSend = (user) => {
-  const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_ACCESS_KEY);
+  const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
   return {
     accessToken: accessToken,
     fullname: user.personal_info.fullname,
@@ -57,8 +57,8 @@ const formatDataToSend = (user) => {
 
 const s3 = new aws.S3({
   region: "ap-south-1",
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.AWS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
 const generateUploadURL = async () => {
@@ -174,7 +174,8 @@ app.get("/get-upload-url", (req, res) => {
     });
 });
 
-app.get("/latest-blogs", (req, res) => {
+app.post("/latest-blogs", (req, res) => {
+  let { page } = req.body;
   let maxLimit = 5;
   Blog.find({ draft: false })
     .populate(
@@ -183,12 +184,24 @@ app.get("/latest-blogs", (req, res) => {
     )
     .sort({ publishedAt: -1 })
     .select("blog_id title description banner activity tags publishedAt -_id ")
+    .skip((page - 1) * maxLimit)
     .limit(maxLimit)
     .then((data) => {
       return res.status(200).json({ blogs: data });
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });
+    });
+});
+
+app.post("/all-latest-blogs-count", (req, res) => {
+  Blog.countDocuments({ draft: false })
+    .then((count) => {
+      return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      console.log(err.message);
+      return res.status(500).json({ error: err });
     });
 });
 
@@ -294,7 +307,7 @@ app.post("/create-blog", verifyJWT, (req, res) => {
 });
 
 app.post("/search-blogs", (req, res) => {
-  const { tag } = req.body;
+  const { tag, page } = req.body;
 
   const findQuery = { tags: tag, draft: false };
 
@@ -307,12 +320,27 @@ app.post("/search-blogs", (req, res) => {
     )
     .sort({ publishedAt: -1 })
     .select("blog_id title description banner activity tags publishedAt -_id ")
+    .skip((page - 1) * maxLimit)
     .limit(maxLimit)
     .then((data) => {
       console.log(data);
       return res.status(200).json({ blogs: data });
     })
     .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+app.post("/search-blogs-counts", (req, res) => {
+  let { tag } = req.body;
+  let findQuery = { tags: tag, draft: false };
+
+  Blog.countDocuments(findQuery)
+    .then((count) => {
+      return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      console.log(err);
       return res.status(500).json({ error: err.message });
     });
 });
