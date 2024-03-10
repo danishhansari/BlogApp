@@ -4,6 +4,7 @@ import axios from "axios";
 import AnimationWrapper from "../common/page-animation";
 import Loader from "../components/loader.component";
 import { UserContext } from "../App";
+import AboutUser from "../components/about.component";
 
 export const profileDataStructure = {
   personal_info: {
@@ -93,6 +94,13 @@ const ProfilePage = () => {
                   ""
                 )}
               </div>
+
+              <AboutUser
+                bio={bio}
+                social_links={social_links}
+                joinedAt={joinedAt}
+                className="max-md:hidden"
+              />
             </div>
           </section>
         )}
