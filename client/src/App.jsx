@@ -7,6 +7,7 @@ import Editor from "./pages/editor.pages.jsx";
 import HomePage from "./pages/home.page.jsx";
 import SearchPage from "./pages/search.page.jsx";
 import PageNotFound from "./pages/404.page.jsx";
+import ProfilePage from "./pages/profile.page.jsx";
 
 export const UserContext = createContext({});
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="signin" element={<UserAuthForm type="sign-in" />} />
             <Route path="signup" element={<UserAuthForm type="sign-up" />} />
             <Route path="search/:query" element={<SearchPage />} />
+            <Route path="user/:id" element={<ProfilePage />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>
           <Route path="/editor" element={<Editor />} />
