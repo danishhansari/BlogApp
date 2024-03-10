@@ -38,9 +38,15 @@
 # GET http://localhost:8000/trending-blogs
 
 
-POST http://localhost:8000/search-blogs
+# POST http://localhost:8000/search-blogs
+# Content-Type: "application/json"
+
+# {
+#     "tag": "aws"
+# }
+POST http://localhost:8000/search-users
 Content-Type: "application/json"
 
 {
-    "tag": "aws"
+    "query": "vishal"
 }

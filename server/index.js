@@ -356,3 +356,19 @@ app.post("/search-blogs-count", (req, res) => {
       return res.status(500).json({ error: err.message });
     });
 });
+
+app.post("/search-users", (req, res) => {
+  let { query } = req.body;
+
+  User.find({ "personal_info.username": new RegExp(query, "i") })
+    .limit(50)
+    .select(
+      "personal_info.fullname personal_info.username personal_info.profile_img -_id"
+    )
+    .then((user) => {
+      return res.status(200).json({ user });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
