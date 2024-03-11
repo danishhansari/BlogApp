@@ -16,7 +16,7 @@ const AboutUser = ({ bio, social_links, joinedAt, className }) => {
               <Link to={link} key={key} target="_blank">
                 <i
                   className={`fi ${
-                    key !== "website" ? "fi-brands-${key}" : "fi-rr-globe"
+                    key !== "website" ? `fi-brands-${key}` : "fi-rr-globe"
                   } text-2xl  hover:text-black`}
                 ></i>
               </Link>
