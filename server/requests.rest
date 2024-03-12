@@ -51,9 +51,18 @@
 #     "query": "vishal"
 # }
 
-POST http://localhost:8000/get-profile
+# POST http://localhost:8000/get-profile
+# Content-Type: "application/json"
+
+# {
+#     "username": "dan72mail"
+# }
+
+POST http://localhost:8000/get-blog
 Content-Type: "application/json"
 
 {
-    "username": "dan72mail"
+    "blog_id": "How-to-be-in-the-top-1-in-2024-d_SLYKQ1ArARz-DHIU1nl"
 }
+
+
