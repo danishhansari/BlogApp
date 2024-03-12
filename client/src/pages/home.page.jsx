@@ -15,6 +15,7 @@ const HomePage = () => {
   const [trendingBlogs, setTrendingBlogs] = useState(null);
   const [pageState, setPageState] = useState("home");
 
+  console.log(blogs);
   const categories = ["nodejs", "aws", "notion", "productivity", "tech"];
 
   const fetchLatestBlog = ({ page = 1 }) => {
@@ -85,7 +86,7 @@ const HomePage = () => {
   useEffect(() => {
     activeTabRef.current.click();
 
-    pageState === "home"
+    pageState == "home"
       ? fetchLatestBlog({ page: 1 })
       : fetchBlogByCategory({ page: 1 });
     if (!trendingBlogs) fetchTrendingBlog();
