@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { blogContext } from "../pages/blog.page";
 import { Link } from "react-router-dom";
+import { UserContext } from "../App";
 
 const BlogInteraction = () => {
   const {
@@ -15,6 +16,10 @@ const BlogInteraction = () => {
     },
     setBlog,
   } = useContext(blogContext);
+
+  const {
+    userAuth: { username },
+  } = useContext(UserContext);
 
   return (
     <>
@@ -34,8 +39,16 @@ const BlogInteraction = () => {
         </div>
 
         <div className="flex gap-6 items-center">
-
-        
+          {username === author_username ? (
+            <Link
+              className="underline hover:text-purple"
+              to={`/editor/${blog_id}`}
+            >
+              Edit
+            </Link>
+          ) : (
+            ""
+          )}
 
           <Link
             to={`https://twitter.com/intent/tweet?text=Read ${encodeURIComponent(

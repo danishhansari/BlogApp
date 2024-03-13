@@ -5,6 +5,7 @@ import Loader from "../components/loader.component";
 import AnimationWrapper from "../common/page-animation";
 import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction.component";
+import BlogPostCard from "../components/blog-post.component";
 
 export const blogStructure = {
   title: "",
@@ -21,6 +22,7 @@ export const blogContext = createContext();
 const BlogPage = () => {
   const { blog_id } = useParams();
   const [blog, setBlog] = useState(blogStructure);
+  const [similarBlog, setSimilarBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const {
@@ -40,6 +42,16 @@ const BlogPage = () => {
         blog_id,
       })
       .then(({ data: { blog } }) => {
+        axios
+          .post(`http://localhost:8000/search-blogs`, {
+            limit: 6,
+            tag: "test",
+            eliminate_blog: "sdvfbgnh-rpkJJ0qEEkxiCp6qJFX_A",
+          })
+          .then(({ data }) => {
+            setSimilarBlog(data.blogs);
+            console.log(data.blogs);
+          });
         setBlog(blog);
         setLoading(false);
       })
@@ -48,9 +60,17 @@ const BlogPage = () => {
         setLoading(false);
       });
   };
+
   useEffect(() => {
+    resetStates();
     fetchBlogs();
-  }, []);
+  }, [blog_id]);
+
+  const resetStates = () => {
+    setBlog(blogStructure);
+    setSimilarBlog(null);
+    setLoading(true);
+  };
   return (
     <>
       <AnimationWrapper>
@@ -88,6 +108,34 @@ const BlogPage = () => {
               </div>
 
               <BlogInteraction />
+
+              <BlogInteraction />
+
+              {similarBlog !== null && similarBlog.length ? (
+                <>
+                  <h1 className="text-2xl mt-14 mb-10 font-medium">
+                    Similar component exists
+                  </h1>
+
+                  {similarBlog.map((blog, index) => {
+                    const {
+                      author: { personal_info },
+                    } = blog;
+                    return (
+                      <AnimationWrapper
+                        key={index}
+                        transition={{ duration: 1, delay: index * 0.08 }}
+                      >
+                        <BlogPostCard content={blog} author={personal_info} />
+                      </AnimationWrapper>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  <h1>No similar blog are there</h1>
+                </>
+              )}
             </div>
           </blogContext.Provider>
         )}

@@ -307,19 +307,19 @@ app.post("/create-blog", verifyJWT, (req, res) => {
 });
 
 app.post("/search-blogs", (req, res) => {
-  const { tag, page, query, author } = req.body;
+  const { tag, page, query, author, limit, eliminate_blog } = req.body;
 
   let findQuery;
 
   if (tag) {
-    findQuery = { tags: tag, draft: false };
+    findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
   } else if (query) {
     findQuery = { draft: false, title: new RegExp(query, "i") };
   } else if (author) {
     findQuery = { author, draft: false };
   }
 
-  let maxLimit = 5;
+  let maxLimit = limit ? limit : 4;
 
   Blog.find(findQuery)
     .populate(
