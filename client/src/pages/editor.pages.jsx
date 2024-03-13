@@ -21,12 +21,12 @@ const Editor = () => {
   const [textEditor, setTextEditor] = useState({ isReady: false });
 
   const {
-    userAuth: { accessToken },
+    userAuth: { access_token },
   } = useContext(UserContext);
 
   return (
     <>
-      {accessToken === null ? (
+      {access_token === null ? (
         <Navigate to="/signin" />
       ) : (
         <EditorContext.Provider

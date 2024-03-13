@@ -46,9 +46,9 @@ const verifyJWT = (req, res, next) => {
 };
 
 const formatDataToSend = (user) => {
-  const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+  const access_token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
   return {
-    accessToken: accessToken,
+    access_token: access_token,
     fullname: user.personal_info.fullname,
     username: user.personal_info.username,
     profile_img: user.personal_info.profile_img,
@@ -307,19 +307,19 @@ app.post("/create-blog", verifyJWT, (req, res) => {
 });
 
 app.post("/search-blogs", (req, res) => {
-  const { tag, page, query, author } = req.body;
+  const { tag, page, query, author, limit, eliminate_blog } = req.body;
 
   let findQuery;
 
   if (tag) {
-    findQuery = { tags: tag, draft: false };
+    findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
   } else if (query) {
     findQuery = { draft: false, title: new RegExp(query, "i") };
   } else if (author) {
     findQuery = { author, draft: false };
   }
 
-  let maxLimit = 5;
+  let maxLimit = limit ? limit : 2;
 
   Blog.find(findQuery)
     .populate(

@@ -20,7 +20,7 @@ const PublishForm = () => {
   } = useContext(EditorContext);
 
   let {
-    userAuth: { accessToken },
+    userAuth: { access_token },
   } = useContext(UserContext);
 
   const publishBlog = (e) => {
@@ -55,7 +55,7 @@ const PublishForm = () => {
     axios
       .post(`${import.meta.env.VITE_SERVER_LOCATION}/create-blog`, blogObj, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${access_token}`,
         },
       })
       .then(() => {

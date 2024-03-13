@@ -10,7 +10,6 @@ export const blogStructure = {
   title: "",
   description: "",
   content: [],
-  tags: [],
   author: { personal_info: {} },
   banner: "",
   publishedAt: "",
@@ -21,6 +20,7 @@ export const blogContext = createContext();
 const BlogPage = () => {
   const { blog_id } = useParams();
   const [blog, setBlog] = useState(blogStructure);
+  const [similarBlog, setSimilarBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const {
@@ -40,6 +40,17 @@ const BlogPage = () => {
         blog_id,
       })
       .then(({ data: { blog } }) => {
+        axios
+          .post(`${import.meta.env.VITE_SERVER_LOCATION}/search-blogs`, {
+            tag: blog.tags[0],
+            limit: 6,
+            eliminate_blog: blog_id,
+          })
+          .then(({ data }) => {
+            console.log(blog.tags);
+            setSimilarBlog(data.blogs);
+            console.log("I am data blogs", data.blogs);
+          });
         setBlog(blog);
         setLoading(false);
       })
@@ -86,6 +97,10 @@ const BlogPage = () => {
                   </p>
                 </div>
               </div>
+
+              <BlogInteraction />
+
+              {/* Blog content over here */}
 
               <BlogInteraction />
             </div>

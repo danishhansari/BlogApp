@@ -10,11 +10,11 @@ import { UserContext } from "../App.jsx";
 
 const UserAuthForm = ({ type }) => {
   let {
-    userAuth: { accessToken },
+    userAuth: { access_token },
     setUserAuth,
   } = useContext(UserContext);
 
-  console.log(accessToken);
+  console.log(access_token);
 
   const userAuthThroughServer = (serverRoute, formData) => {
     axios
@@ -69,7 +69,7 @@ const UserAuthForm = ({ type }) => {
     e.preventDefault();
     toast.error("Please use email and password to login");
   };
-  return accessToken ? (
+  return access_token ? (
     <Navigate to={"/"} />
   ) : (
     <AnimationWrapper keyValue={type}>
