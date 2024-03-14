@@ -6,6 +6,7 @@ import AnimationWrapper from "../common/page-animation";
 import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction.component";
 import BlogPostCard from "../components/blog-post.component";
+import BlogContent from "../components/blog-content.component";
 
 export const blogStructure = {
   title: "",
@@ -25,7 +26,7 @@ const BlogPage = () => {
   const [similarBlog, setSimilarBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const {
+  let {
     title,
     content,
     description,
@@ -42,16 +43,16 @@ const BlogPage = () => {
         blog_id,
       })
       .then(({ data: { blog } }) => {
-        axios
-          .post(`http://localhost:8000/search-blogs`, {
-            limit: 6,
-            tag: "test",
-            eliminate_blog: "sdvfbgnh-rpkJJ0qEEkxiCp6qJFX_A",
-          })
-          .then(({ data }) => {
-            setSimilarBlog(data.blogs);
-            console.log(data.blogs);
-          });
+        //   axios
+        //     .post(`http://localhost:8000/search-blogs`, {
+        //       limit: 6,
+        //       tag: "test",
+        //       eliminate_blog: "sdvfbgnh-rpkJJ0qEEkxiCp6qJFX_A",
+        //     })
+        // .then(({ data }) => {
+        //   setSimilarBlog(data.blogs);
+        //   console.log(data.blogs);
+        // });
         setBlog(blog);
         setLoading(false);
       })
@@ -108,6 +109,16 @@ const BlogPage = () => {
               </div>
 
               <BlogInteraction />
+
+              <div className="my-12 font-gelasio blog-page-content">
+                {blog.content[0].blocks.map((block, i) => {
+                  return (
+                    <div key={i} className="my-4">
+                      <BlogContent block={block} />
+                    </div>
+                  );
+                })}
+              </div>
 
               <BlogInteraction />
 
