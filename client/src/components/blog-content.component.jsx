@@ -53,7 +53,7 @@ const BlogContent = ({ block }) => {
     case "paragraph":
       return <p dangerouslySetInnerHTML={{ __html: data.text }}></p>;
     case "header":
-      return <h2>{data.text}</h2>;
+      return <h2 dangerousliSetInnerHTML={{ __html : data.text}}></h2>;
     case "image":
       console.log(data.file.url);
       return <Img url={data.file.url} caption={data.caption} />;
