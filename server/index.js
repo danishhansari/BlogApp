@@ -46,9 +46,9 @@ const verifyJWT = (req, res, next) => {
 };
 
 const formatDataToSend = (user) => {
-  const accessToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+  const access_token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
   return {
-    accessToken: accessToken,
+    access_token: access_token,
     fullname: user.personal_info.fullname,
     username: user.personal_info.username,
     profile_img: user.personal_info.profile_img,
@@ -340,7 +340,7 @@ app.post("/search-blogs", (req, res) => {
     findQuery = { author, draft: false };
   }
 
-  let maxLimit = limit ? limit : 4;
+  let maxLimit = 5;
 
   Blog.find(findQuery)
     .populate(

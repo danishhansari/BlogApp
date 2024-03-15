@@ -11,7 +11,7 @@ const UserNavigation = () => {
   } = useContext(UserContext);
   const signinOutUser = () => {
     removeSession("user");
-    setUserAuth({ accessToken: null });
+    setUserAuth({ access_token: null });
   };
   return (
     <>

@@ -26,7 +26,7 @@ const Editor = () => {
   const [loading, setLoading] = useState(true);
 
   const {
-    userAuth: { accessToken },
+    userAuth: { access_token },
   } = useContext(UserContext);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const Editor = () => {
 
   return (
     <>
-      {accessToken === null ? (
+      {access_token === null ? (
         <Navigate to="/signin" />
       ) : loading ? (
         <Loader />

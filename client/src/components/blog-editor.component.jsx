@@ -26,7 +26,7 @@ const BlogEditor = () => {
   } = useContext(EditorContext);
 
   const {
-    userAuth: { accessToken },
+    userAuth: { access_token },
   } = useContext(UserContext);
 
   useEffect(() => {
@@ -128,7 +128,7 @@ const BlogEditor = () => {
             { ...blogObj, id: blog_id },
             {
               headers: {
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `Bearer ${access_token}`,
               },
             }
           )

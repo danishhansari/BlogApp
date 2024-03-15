@@ -5,7 +5,7 @@ import { UserContext } from "../App";
 import UserNavigation from "./user-navigation.component";
 const Navbar = () => {
   const {
-    userAuth: { accessToken, profile_img },
+    userAuth: { access_token, profile_img },
   } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -65,7 +65,7 @@ const Navbar = () => {
             <p>Write</p>
           </Link>
 
-          {accessToken ? (
+          {access_token ? (
             <>
               <Link to="/notification">
                 <button className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10">

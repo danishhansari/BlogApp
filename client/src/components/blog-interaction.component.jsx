@@ -49,7 +49,10 @@ const BlogInteraction = () => {
           ) : (
             ""
           )}
+<<<<<<< HEAD
 
+=======
+>>>>>>> optimization
           <Link
             to={`https://twitter.com/intent/tweet?text=Read ${encodeURIComponent(
               title

@@ -22,7 +22,7 @@ const PublishForm = () => {
   } = useContext(EditorContext);
 
   let {
-    userAuth: { accessToken },
+    userAuth: { access_token },
   } = useContext(UserContext);
 
   const publishBlog = (e) => {
@@ -55,6 +55,7 @@ const PublishForm = () => {
       draft: false,
     };
     axios
+<<<<<<< HEAD
       .post(
         `${import.meta.env.VITE_SERVER_LOCATION}/create-blog`,
         { ...blogObj, id: blog_id },
@@ -64,6 +65,13 @@ const PublishForm = () => {
           },
         }
       )
+=======
+      .post(`${import.meta.env.VITE_SERVER_LOCATION}/create-blog`, blogObj, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+>>>>>>> optimization
       .then(() => {
         toast.dismiss(loading);
         e.target.classList.remove("disable");
