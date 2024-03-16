@@ -7,6 +7,7 @@ import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction.component";
 import BlogPostCard from "../components/blog-post.component";
 import BlogContent from "../components/blog-content.component";
+import CommentsContainer from "../components/comments.component";
 
 export const blogStructure = {
   title: "",
@@ -17,7 +18,7 @@ export const blogStructure = {
   publishedAt: "",
 };
 
-export const blogContext = createContext();
+export const BlogContext = createContext();
 
 const BlogPage = () => {
   const { blog_id } = useParams();
@@ -25,6 +26,8 @@ const BlogPage = () => {
   const [similarBlog, setSimilarBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [islikedByUser, setLikedByUser] = useState(false);
+  const [commentsWrapper, setCommentsWrapper] = useState(false);
+  const [totalParentCommentsLoaded, setTotalParentCommentsLoaded] = useState(0);
 
   let {
     title,
@@ -71,6 +74,9 @@ const BlogPage = () => {
     setBlog(blogStructure);
     setSimilarBlog(null);
     setLoading(true);
+    setLikedByUser(false);
+    setCommentsWrapper(false);
+    setTotalParentCommentsLoaded(0);
   };
   return (
     <>
@@ -78,9 +84,19 @@ const BlogPage = () => {
         {loading ? (
           <Loader />
         ) : (
-          <blogContext.Provider
-            value={{ blog, setBlog, islikedByUser, setLikedByUser }}
+          <BlogContext.Provider
+            value={{
+              blog,
+              setBlog,
+              islikedByUser,
+              setLikedByUser,
+              commentsWrapper,
+              setCommentsWrapper,
+              totalParentCommentsLoaded,
+              setTotalParentCommentsLoaded,
+            }}
           >
+            <CommentsContainer />
             <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
               <img src={banner} className="aspect-video" />
 
@@ -150,7 +166,7 @@ const BlogPage = () => {
                 </>
               )}
             </div>
-          </blogContext.Provider>
+          </BlogContext.Provider>
         )}
       </AnimationWrapper>
     </>
