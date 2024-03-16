@@ -55,23 +55,15 @@ const PublishForm = () => {
       draft: false,
     };
     axios
-<<<<<<< HEAD
       .post(
         `${import.meta.env.VITE_SERVER_LOCATION}/create-blog`,
         { ...blogObj, id: blog_id },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${access_token}`,
           },
         }
       )
-=======
-      .post(`${import.meta.env.VITE_SERVER_LOCATION}/create-blog`, blogObj, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      })
->>>>>>> optimization
       .then(() => {
         toast.dismiss(loading);
         e.target.classList.remove("disable");

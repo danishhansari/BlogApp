@@ -42,7 +42,6 @@ const BlogPage = () => {
         blog_id,
       })
       .then(({ data: { blog } }) => {
-<<<<<<< HEAD
         //   axios
         //     .post(`http://localhost:8000/search-blogs`, {
         //       limit: 6,
@@ -53,19 +52,6 @@ const BlogPage = () => {
         //   setSimilarBlog(data.blogs);
         //   console.log(data.blogs);
         // });
-=======
-        axios
-          .post(`${import.meta.env.VITE_SERVER_LOCATION}/search-blogs`, {
-            tag: blog.tags[0],
-            limit: 6,
-            eliminate_blog: blog_id,
-          })
-          .then(({ data }) => {
-            console.log(blog.tags);
-            setSimilarBlog(data.blogs);
-            console.log("I am data blogs", data.blogs);
-          });
->>>>>>> optimization
         setBlog(blog);
         setLoading(false);
       })
@@ -123,7 +109,6 @@ const BlogPage = () => {
 
               <BlogInteraction />
 
-<<<<<<< HEAD
               <div className="my-12 font-gelasio blog-page-content">
                 {blog.content[0].blocks.map((block, i) => {
                   return (
@@ -161,11 +146,6 @@ const BlogPage = () => {
                   <h1>No similar blog are there</h1>
                 </>
               )}
-=======
-              {/* Blog content over here */}
-
-              <BlogInteraction />
->>>>>>> optimization
             </div>
           </blogContext.Provider>
         )}

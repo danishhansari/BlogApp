@@ -247,7 +247,7 @@ app.post("/create-blog", verifyJWT, (req, res) => {
         .json({ error: "You must provide blog banner to publish it" });
     }
 
-    if (!content.blocks.length) {
+    if (!content.length) {
       return res
         .status(403)
         .json({ error: "There must be some blog content to publish it" });
@@ -262,7 +262,7 @@ app.post("/create-blog", verifyJWT, (req, res) => {
 
   tags = tags.map((tag) => tag.toLowerCase());
 
-  const blog_id =
+  let blog_id =
     id ||
     title
       .replace(/[^a-zA-Z0-9]/g, " ")
@@ -283,7 +283,7 @@ app.post("/create-blog", verifyJWT, (req, res) => {
         draft: draft ? draft : false,
       }
     )
-      .then((blog) => {
+      .then(() => {
         return res.status(200).json({ id: blog_id });
       })
       .catch((err) => {
