@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import cors from "cors";
 import aws from "aws-sdk";
 import Blog from "./Schema/Blog.js";
+import Notification from "./Schema/Notification.js";
 
 import User from "./Schema/User.js";
 
@@ -62,7 +63,6 @@ const s3 = new aws.S3({
 });
 
 const generateUploadURL = async () => {
-  const date = new Date();
   const imageName = `${nanoid()}.jpeg`;
 
   return await s3.getSignedUrlPromise("putObject", {
@@ -439,6 +439,59 @@ app.post("/get-blog", (req, res) => {
       }
 
       return res.status(200).json({ blog });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+app.post("/like-blog", verifyJWT, (req, res) => {
+  const user_id = req.user;
+  const { _id, islikedByUser } = req.body;
+
+  let incrementVal = !islikedByUser ? 1 : -1;
+
+  Blog.findOneAndUpdate(
+    { _id },
+    { $inc: { "activity.total_likes": incrementVal } }
+  ).then((blog) => {
+    if (!islikedByUser) {
+      let like = new Notification({
+        type: "like",
+        blog: _id,
+        notification_for: blog.author,
+        user: user_id,
+      });
+
+      like.save().then((notification) => {
+        return res.status(200).json({ liked_by_user: true });
+      });
+    } else {
+      Notification.findOneAndDelete({
+        user: user_id,
+        blog: _id,
+        type: "like",
+      })
+        .then((data) => {
+          (data) => {
+            return res.status(200).json({ liked_by_user: false });
+          };
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: err.message });
+        });
+    }
+  });
+});
+
+app.post("/isliked-by-user", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { _id } = req.body;
+
+  Notification.exists({ user: user_id, type: "like", blog: _id })
+    .then((result) => {
+      return res.status(200).json({ result });
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });
