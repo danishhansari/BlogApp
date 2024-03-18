@@ -23,8 +23,8 @@ export const BlogContext = createContext();
 const BlogPage = () => {
   const { blog_id } = useParams();
   const [blog, setBlog] = useState(blogStructure);
-  const [similarBlog, setSimilarBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [similarBlog, setSimilarBlog] = useState(null);
   const [islikedByUser, setLikedByUser] = useState(false);
   const [commentsWrapper, setCommentsWrapper] = useState(false);
   const [totalParentCommentsLoaded, setTotalParentCommentsLoaded] = useState(0);
@@ -56,6 +56,7 @@ const BlogPage = () => {
         //   setSimilarBlog(data.blogs);
         //   console.log(data.blogs);
         // });
+        console.log("I am blog", blog);
         setBlog(blog);
         setLoading(false);
       })

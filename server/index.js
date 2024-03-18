@@ -8,6 +8,7 @@ import cors from "cors";
 import aws from "aws-sdk";
 import Blog from "./Schema/Blog.js";
 import Notification from "./Schema/Notification.js";
+import Comment from "./Schema/Comment.js";
 
 import User from "./Schema/User.js";
 
@@ -424,7 +425,7 @@ app.post("/get-blog", (req, res) => {
       "personal_info.fullname personal_info.username personal_info.profile_img"
     )
     .select(
-      "title description content banner activity publishedAt blog_id tags"
+      "title description content banner activity publishedAt blog_id tags comments"
     )
     .then((blog) => {
       User.findOneAndUpdate({
@@ -496,4 +497,51 @@ app.post("/isliked-by-user", verifyJWT, (req, res) => {
     .catch((err) => {
       return res.status(500).json({ error: err.message });
     });
+});
+
+app.post("/add-comment", verifyJWT, (req, res) => {
+  const user_id = req.user;
+  const { _id, comment, blog_author } = req.body;
+
+  if (!comment.length) {
+    return res.status(403).json({ error: "Write something to leave comment" });
+  }
+  // Creating a comment doc
+  const commentObj = new Comment({
+    blog_id: _id,
+    comment,
+    blog_author,
+    commented_by: user_id,
+  });
+
+  commentObj.save().then((commentFile) => {
+    const { comment, commentedAt, children } = commentFile;
+
+    Blog.findOneAndUpdate(
+      { _id },
+      {
+        $push: { comments: commentFile._id },
+        $inc: { "activity.total_comments": 1 },
+        "activity.total_parent_comments": 1,
+      }
+    ).then((blog) => {
+      console.log("New Comment Created");
+    });
+
+    const notificationObj = {
+      type: "comment",
+      blog: _id,
+      notification_for: blog_author,
+      user: user_id,
+      comment: commentFile._id,
+    };
+
+    new Notification(notificationObj)
+      .save()
+      .then((notification) => console.log("New Notification created"));
+
+    return res
+      .status(200)
+      .json({ comment, commentedAt, _id: commentFile._id, user_id, children });
+  });
 });
