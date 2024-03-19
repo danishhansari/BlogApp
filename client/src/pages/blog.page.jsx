@@ -7,7 +7,9 @@ import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction.component";
 import BlogPostCard from "../components/blog-post.component";
 import BlogContent from "../components/blog-content.component";
-import CommentsContainer from "../components/comments.component";
+import CommentsContainer, {
+  fetchComments,
+} from "../components/comments.component";
 
 export const blogStructure = {
   title: "",
@@ -45,7 +47,7 @@ const BlogPage = () => {
       .post(`${import.meta.env.VITE_SERVER_LOCATION}/get-blog`, {
         blog_id,
       })
-      .then(({ data: { blog } }) => {
+      .then(async ({ data: { blog } }) => {
         //   axios
         //     .post(`http://localhost:8000/search-blogs`, {
         //       limit: 6,
@@ -57,6 +59,10 @@ const BlogPage = () => {
         //   console.log(data.blogs);
         // });
         console.log("I am blog", blog);
+        blog.comments = await fetchComments({
+          blog_id: blog._id,
+          setParentCommentCountFn: setTotalParentCommentsLoaded,
+        });
         setBlog(blog);
         setLoading(false);
       })

@@ -1,7 +1,35 @@
-import { useContext, lazy } from "react";
+import { useContext } from "react";
 import { BlogContext } from "../pages/blog.page";
 import CommentField from "./comment-field.component";
+import axios from "axios";
 
+export const fetchComments = async ({
+  skip = 0,
+  blog_id,
+  setParentCommentCountFn,
+  comment_array = null,
+}) => {
+  
+  let res;
+
+  await axios
+    .post(`${import.meta.env.VITE_SERVER_LOCATION}/get-blog-comments`, {
+      blog_id,
+      skip,
+    })
+    .then(({ data }) => {
+      data.map((comment) => {
+        comment.childrenLevel = 0;
+      });
+      setParentCommentCountFn((prev) => prev + data.length);
+
+      if (comment_array === null) {
+        res = { results: data };
+      } else {
+        res = { results: [...comment_array, ...data] };
+      }
+    });
+};
 const CommentsContainer = () => {
   const {
     blog: { title },
@@ -28,7 +56,7 @@ const CommentsContainer = () => {
           </button>
         </div>
         <hr className="border-grey my-8 w-[120%] -ml-10" />
-        <CommentField action={'comment'}/>
+        <CommentField action={"comment"} />
       </div>
     </>
   );
