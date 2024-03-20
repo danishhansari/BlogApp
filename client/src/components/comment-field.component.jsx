@@ -18,12 +18,8 @@ const CommentField = ({ action }) => {
     },
     comments,
     setBlog,
-    activity,
-    activity: { total_comments, total_parent_comments },
     setTotalParentCommentsLoaded,
   } = useContext(BlogContext);
-
-  console.log(comment);
   const handleComment = () => {
     if (!access_token) {
       return toast.error("login first to leave a comment");

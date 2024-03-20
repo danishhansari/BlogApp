@@ -46,6 +46,8 @@ const BlogPage = () => {
     axios
       .post(`${import.meta.env.VITE_SERVER_LOCATION}/get-blog`, {
         blog_id,
+        mode: "publish",
+        draft: false,
       })
       .then(async ({ data: { blog } }) => {
         //   axios
@@ -82,7 +84,7 @@ const BlogPage = () => {
     setSimilarBlog(null);
     setLoading(true);
     setLikedByUser(false);
-    setCommentsWrapper(false);
+    // setCommentsWrapper(false);
     setTotalParentCommentsLoaded(0);
   };
   return (
@@ -136,7 +138,7 @@ const BlogPage = () => {
               <BlogInteraction />
 
               <div className="my-12 font-gelasio blog-page-content">
-                {blog.content[0].blocks.map((block, i) => {
+                {blog.content[0]?.blocks.map((block, i) => {
                   return (
                     <div key={i} className="my-4">
                       <BlogContent block={block} />
