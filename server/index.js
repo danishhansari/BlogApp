@@ -546,9 +546,8 @@ app.post("/add-comment", verifyJWT, (req, res) => {
   });
 });
 
-app.post("get-blog-comments", (req, res) => {
+app.post("/get-blog-comments", (req, res) => {
   const { blog_id, skip } = req.body;
-
   let maxLimit = 5;
 
   Comment.find({ blog_id, isReply: false })

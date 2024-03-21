@@ -60,7 +60,6 @@ const BlogPage = () => {
         //   setSimilarBlog(data.blogs);
         //   console.log(data.blogs);
         // });
-        console.log("I am blog", blog);
         blog.comments = await fetchComments({
           blog_id: blog._id,
           setParentCommentCountFn: setTotalParentCommentsLoaded,
