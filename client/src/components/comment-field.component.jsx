@@ -15,11 +15,13 @@ const CommentField = ({ action }) => {
     blog: {
       _id,
       author: { _id: blog_author },
+      comments,
+      comments: { results: commentsArr },
     },
-    comments,
     setBlog,
     setTotalParentCommentsLoaded,
   } = useContext(BlogContext);
+
   const handleComment = () => {
     if (!access_token) {
       return toast.error("login first to leave a comment");
@@ -50,12 +52,12 @@ const CommentField = ({ action }) => {
         };
         let newCommentArr;
         data.childrenLevel = 0;
-        newCommentArr = [data];
+        newCommentArr = [data, ...commentsArr];
 
         let parentCommentIncrement = 1;
         setBlog({
           ...blog,
-          comment: { ...comments, results: newCommentArr },
+          comments: { ...comments, results: newCommentArr },
           activity: {
             ...activity,
             total_comments: total_comments + 1,

@@ -15,6 +15,7 @@ export const blogStructure = {
   title: "",
   description: "",
   content: [],
+  // comments: [],
   author: { personal_info: {} },
   banner: "",
   publishedAt: "",
@@ -50,6 +51,7 @@ const BlogPage = () => {
         draft: false,
       })
       .then(async ({ data: { blog } }) => {
+        let res;
         //   axios
         //     .post(`http://localhost:8000/search-blogs`, {
         //       limit: 6,
@@ -83,7 +85,7 @@ const BlogPage = () => {
     setSimilarBlog(null);
     setLoading(true);
     setLikedByUser(false);
-    // setCommentsWrapper(false);
+    setCommentsWrapper(false);
     setTotalParentCommentsLoaded(0);
   };
   return (
