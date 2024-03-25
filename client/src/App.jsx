@@ -9,6 +9,7 @@ import SearchPage from "./pages/search.page.jsx";
 import PageNotFound from "./pages/404.page.jsx";
 import ProfilePage from "./pages/profile.page.jsx";
 import BlogPage from "./pages/blog.page.jsx";
+import SideNav from "./components/sidenavbar.component.jsx";
 
 export const UserContext = createContext({});
 const App = () => {
@@ -33,6 +34,16 @@ const App = () => {
             <Route path="user/:id" element={<ProfilePage />} />
             <Route path="blog/:blog_id" element={<BlogPage />} />
             <Route path="*" element={<PageNotFound />} />
+            <Route path="settings" element={<SideNav />}>
+              <Route
+                path="edit-profile"
+                element={<h1>This is edit profile</h1>}
+              />
+              <Route
+                path="change-password"
+                element={<h1>This is Change password</h1>}
+              />
+            </Route>
           </Route>
           <Route path="/editor" element={<Editor />} />
           <Route path="/editor/:blog_id" element={<Editor />} />
