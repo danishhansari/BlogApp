@@ -105,7 +105,7 @@ const HomePage = () => {
               <>
                 {blogs === null ? (
                   <Loader />
-                ) : blogs.results.length ? (
+                ) : blogs?.results?.length ? (
                   blogs.results.map((blog, i) => {
                     return (
                       <AnimationWrapper
