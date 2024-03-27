@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AnimationWrapper from "../common/page-animation";
 import InPageNavigation from "../components/inpage-navigation.component";
 import axios from "axios";
@@ -83,13 +83,16 @@ const HomePage = () => {
       });
   };
 
-  useEffect(() => {
-    activeTabRef.current.click();
-
+  const fetchData = useCallback(() => {
     pageState == "home"
       ? fetchLatestBlog({ page: 1 })
       : fetchBlogByCategory({ page: 1 });
     if (!trendingBlogs) fetchTrendingBlog();
+  }, [trendingBlogs, fetchBlogByCategory, fetchTrendingBlog, fetchLatestBlog]);
+
+  useEffect(() => {
+    activeTabRef.current.click();
+    fetchData();
   }, [pageState]);
 
   return (
