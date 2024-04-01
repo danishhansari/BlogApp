@@ -3,6 +3,8 @@
 Fork this repo of "MERN Blogging Website" to start following the video tutorial.
 
 Checkout website demo - [Demo](https://youtu.be/J7BGuuuvDDk)
+Big thanks to Modern Dev explaination 
+
 
 # Database Schema [Reference](https://app.eraser.io/workspace/2X75XtczGJEd3tOydSEu)
 
@@ -23,3 +25,4 @@ This website features include -
 13. Also user can change login password from settings.
 14. Its mobile responsive with modern design + fade in animation on pages.
     And much more.
+    
