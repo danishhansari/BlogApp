@@ -1,15 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/navbar.component.jsx";
-import UserAuthForm from "./pages/userAuthForm.page.jsx";
+import Navbar from "./components/navbar.component";
+import UserAuthForm from "./pages/userAuthForm.page";
 import { useState, useEffect, createContext } from "react";
-import { lookInSession } from "./common/session.jsx";
-import Editor from "./pages/editor.pages.jsx";
-import HomePage from "./pages/home.page.jsx";
-import SearchPage from "./pages/search.page.jsx";
-import PageNotFound from "./pages/404.page.jsx";
-import ProfilePage from "./pages/profile.page.jsx";
-import BlogPage from "./pages/blog.page.jsx";
-import SideNav from "./components/sidenavbar.component.jsx";
+import { lookInSession } from "./common/session";
+import Editor from "./pages/editor.pages";
+import HomePage from "./pages/home.page";
+import SearchPage from "./pages/search.page";
+import PageNotFound from "./pages/404.page";
+import ProfilePage from "./pages/profile.page";
+import BlogPage from "./pages/blog.page";
+import SideNav from "./components/sidenavbar.component";
+import ChangePassword from "./pages/change-password.page";
 
 export const UserContext = createContext({});
 const App = () => {
@@ -39,10 +40,7 @@ const App = () => {
                 path="edit-profile"
                 element={<h1>This is edit profile</h1>}
               />
-              <Route
-                path="change-password"
-                element={<h1>This is Change password</h1>}
-              />
+              <Route path="change-password" element={<ChangePassword />} />
             </Route>
           </Route>
           <Route path="/editor" element={<Editor />} />

@@ -58,11 +58,19 @@
 #     "username": "dan72mail"
 # }
 
-POST http://localhost:8000/get-blog
+# POST http://localhost:8000/get-blog
+# Content-Type: "application/json"
+
+# {
+#     "blog_id": "How-to-be-in-the-top-1-in-2024-d_SLYKQ1ArARz-DHIU1nl"
+# }
+
+
+POST http://localhost:8000/signin
 Content-Type: "application/json"
 
 {
-    "blog_id": "How-to-be-in-the-top-1-in-2024-d_SLYKQ1ArARz-DHIU1nl"
+    "email": "dan72mail@gmail.com", 
+    "password": "Indian@123"
 }
-
 
