@@ -23,6 +23,7 @@ const InputBox = ({
               : type
           }
           defaultValue={value}
+          value={value}
           id={id}
           className="input-box"
           placeholder={placeholder}
