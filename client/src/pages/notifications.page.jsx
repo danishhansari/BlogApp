@@ -6,6 +6,7 @@ import Loader from "../components/loader.component";
 import AnimationWrapper from "../common/page-animation";
 import NoDataMessage from "../components/nodata.component";
 import NotificationCard from "../components/notification-card.component";
+import LoadMoreDataBtn from "../components/load-more.component";
 
 const Notification = () => {
   const [filter, setFilter] = useState("all");
@@ -87,17 +88,28 @@ const Notification = () => {
           <Loader />
         ) : (
           <>
-            {notifications.results?.length ? (
-              notifications.results?.map((notification, i) => {
+            {notifications?.results?.length ? (
+              notifications?.results?.map((notification, i) => {
                 return (
                   <AnimationWrapper key={i} transition={{ delay: i * 0.08 }}>
-                    <NotificationCard />
+                    <NotificationCard
+                      data={notification}
+                      index={i}
+                      notificationState={{ notifications, setNotifications }}
+                    />
                   </AnimationWrapper>
                 );
               })
             ) : (
               <NoDataMessage message={"Nothing available"} />
             )}
+            {/* <LoadMoreDataBtn
+              state={notifications}
+              fetchDataFn={fetchNotifications}
+              additionalParams={{
+                deletedDocCount: notifications.deletedDocCount,
+              }}
+            /> */}
           </>
         )}
       </div>
