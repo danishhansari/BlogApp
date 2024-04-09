@@ -9,6 +9,7 @@ import InputBox from "../components/input.component";
 import { uploadImage } from "../common/aws";
 import { storeInSession } from "../common/session";
 
+
 const EditProfile = () => {
   const bioLimit = 150;
   const profileImageRef = useRef();

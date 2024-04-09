@@ -779,6 +779,7 @@ const deleteComments = (_id) => {
       console.log(err);
     });
 };
+
 app.post("/delete-comment", verifyJWT, (req, res) => {
   const user_id = req.user;
 
@@ -792,4 +793,24 @@ app.post("/delete-comment", verifyJWT, (req, res) => {
       return res.status(403).json({ error: "You cannot delete this comment" });
     }
   });
+});
+
+app.get("/new-notification", verifyJWT, (req, res) => {
+  const user_id = req.user;
+
+  Notification.exists({
+    notification_for: user_id,
+    seen: false,
+    user: { $ne: user_id },
+  })
+    .then((result) => {
+      if (result) {
+        return res.status(200).json({ new_notification_available: true });
+      } else {
+        return res.status(200).json({ new_notification_available: false });
+      }
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
 });
