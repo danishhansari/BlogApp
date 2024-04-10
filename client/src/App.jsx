@@ -13,6 +13,7 @@ import SideNav from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.page";
 import Notification from "./pages/notifications.page";
+import ManageBlog from "./pages/manage-blogs.page";
 
 export const UserContext = createContext({});
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="blog/:blog_id" element={<BlogPage />} />
             <Route path="*" element={<PageNotFound />} />
             <Route path="dashboard" element={<SideNav />}>
+              <Route path="blogs" element={<ManageBlog />} />
               <Route path="notifications" element={<Notification />} />
             </Route>
             <Route path="settings" element={<SideNav />}>
