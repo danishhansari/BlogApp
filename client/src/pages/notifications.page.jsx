@@ -14,7 +14,9 @@ const Notification = () => {
 
   const filters = ["all", "like", "comment", "reply"];
   const {
-    userAuth: { access_token },
+    userAuth: { access_token, new_notification_available },
+    userAuth,
+    setUserAuth,
   } = useContext(UserContext);
 
   const fetchNotifications = ({ page, deletedDocCount = 0 }) => {
@@ -33,6 +35,10 @@ const Notification = () => {
         }
       )
       .then(async ({ data: { notifications: data } }) => {
+        if (new_notification_available) {
+          setUserAuth({ ...userAuth, new_notification_available: false });
+        }
+
         const formatedData = await filterPagination({
           state: notifications,
           data,
