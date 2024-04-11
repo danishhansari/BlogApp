@@ -5,6 +5,10 @@ import axios from "axios";
 import { UserContext } from "../App";
 import { filterPagination } from "../common/filter-pagination-data";
 import { useEffect } from "react";
+import InPageNavigation from "../components/inpage-navigation.component";
+import NoDataMessage from "../components/nodata.component";
+import AnimationWrapper from "../common/page-animation";
+import ManagePublishedBlogCard from "../components/manage-blogcard.component";
 
 const ManageBlog = () => {
   const [blogs, setBlogs] = useState(null);
@@ -94,6 +98,29 @@ const ManageBlog = () => {
         />
         <i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"></i>
       </div>
+
+      <InPageNavigation routes={["Published Blogs", "Drafts"]}>
+        {
+          // Published blog
+          blogs === null ? (
+            <Loader />
+          ) : blogs.results.length ? (
+            <>
+              {blogs.results.map((blog, i) => {
+                return (
+                  <AnimationWrapper key={i} transition={{ delay: i * 0.04 }}>
+                    <ManagePublishedBlogCard blog={blog} />
+                  </AnimationWrapper>
+                );
+              })}
+            </>
+          ) : (
+            <NoDataMessage message={"No published blogs"} />
+          )
+        }
+
+        <h1>This is Draft Blog</h1>
+      </InPageNavigation>
     </>
   );
 };
