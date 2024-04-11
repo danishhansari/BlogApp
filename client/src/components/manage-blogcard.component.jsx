@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { getDay } from "../common/date";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "../App";
 
 const BlogStats = ({ stats }) => {
   return (
@@ -33,6 +34,10 @@ const BlogStats = ({ stats }) => {
 export const ManagePublishedBlogCard = ({ blog }) => {
   const [showStats, setShowStats] = useState(false);
   const { banner, blog_id, title, publishedAt, activity } = blog;
+  const {
+    userAuth: { access_token },
+  } = useContext(UserContext);
+
   return (
     <>
       <div className="flex gap-10 border-b mb-6 max-md:px-4 border-grey pb-6 items-center">
@@ -63,7 +68,12 @@ export const ManagePublishedBlogCard = ({ blog }) => {
               Stats
             </button>
 
-            <button className="pr-4 py-2 underline text-red">Delete</button>
+            <button
+              className="pr-4 py-2 underline text-red"
+              onClick={(e) => deleteBlog(blog, access_token, e.target)}
+            >
+              Delete
+            </button>
           </div>
         </div>
 
@@ -83,8 +93,42 @@ export const ManagePublishedBlogCard = ({ blog }) => {
   );
 };
 
-export const ManageDraftBlogCard = ({ blog, index }) => {
-  const { title, description, blog_id } = blog;
+const deleteBlog = (blog, access_token, target) => {
+  const { index, blog_id, setStatFunc } = blog;
+  target.setAttribute("disabled", true);
+  axios
+    .post(
+      `${import.meta.env.VITE_SERVER_LOCATION}/delete-blog`,
+      {
+        blog_id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    )
+    .then(({ data }) => {
+      target.removeAttribute(false);
+      setStatFunc((prev) => {
+        const { deletedDocCount, totalDocs, results } = prev;
+
+        results.
+      });
+    });
+};
+
+export const ManageDraftBlogCard = ({ blog }) => {
+  const { title, description, blog_id, index } = blog;
+
+  index++;
+
+  const {
+    userAuth: { access_token },
+  } = useContext(UserContext);
+
+  const deleteBlog = blog;
+
   return (
     <>
       <div className="flex gap-5 lg:gap-10 pb-6 border-b mb-6 border-grey">
@@ -102,7 +146,12 @@ export const ManageDraftBlogCard = ({ blog, index }) => {
               Edit
             </Link>
 
-            <button className="pr-4 py-2 underline text-red">Delete</button>
+            <button
+              className="pr-4 py-2 underline text-red"
+              onClick={(e) => deleteBlog(blog, access_token, e.target)}
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>

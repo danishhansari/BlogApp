@@ -70,7 +70,6 @@ const ManageBlog = () => {
     }
   }, [access_token, blogs, drafts, query]);
 
-  let intervalId;
   const handleSearch = (e) => {
     let search = e.target.value;
     setQuery(search);
@@ -79,6 +78,7 @@ const ManageBlog = () => {
       setDrafts(null);
     }
   };
+
   const handleChange = (e) => {
     if (!e.target.value.length) {
       setQuery("");
@@ -112,7 +112,9 @@ const ManageBlog = () => {
               {blogs.results.map((blog, i) => {
                 return (
                   <AnimationWrapper key={i} transition={{ delay: i * 0.04 }}>
-                    <ManagePublishedBlogCard blog={blog} />
+                    <ManagePublishedBlogCard
+                      blog={{ ...blog, index: i + 1, setStateFunc: setBlogs }}
+                    />
                   </AnimationWrapper>
                 );
               })}
@@ -130,7 +132,9 @@ const ManageBlog = () => {
               {drafts.results.map((draft, i) => {
                 return (
                   <AnimationWrapper key={i} transition={{ delay: i * 0.04 }}>
-                    <ManageDraftBlogCard blog={draft} index={i + 1} />
+                    <ManageDraftBlogCard
+                      blog={{ ...draft, index: i, setStateFunc: setDrafts }}
+                    />
                   </AnimationWrapper>
                 );
               })}

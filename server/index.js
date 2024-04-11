@@ -932,3 +932,31 @@ app.post("/user-written-blogs-count", verifyJWT, (req, res) => {
       return res.status(500).json({ error: err.message });
     });
 });
+
+app.post("/delete-blog", verifyJWT, (req, res) => {
+  const user_id = req.user;
+  const { blog_id } = req.body;
+
+  Blog.findOneAndDelete({ blog_id })
+    .then((blog) => {
+      Notification.deleteMany({ blog: blog._id }).then((data) =>
+        console.log("Notification deleted")
+      );
+
+      Comment.deleteMany({ blog: blog._id }).then((data) =>
+        console.log("comments deleted")
+      );
+
+      User.findOneAndUpdate(
+        { _id: user_id },
+        { $pull: { blog: blog._id }, $inc: { "account_info.total_posts": -1 } }
+      ).then((user) => console.log("Blog deleted"));
+
+      return res.status(200).json({ status: "done" });
+    })
+
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json({ error: err.message });
+    });
+});
