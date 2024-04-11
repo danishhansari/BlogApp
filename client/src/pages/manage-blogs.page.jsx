@@ -39,11 +39,12 @@ const ManageBlog = () => {
           countRoute: "user-written-blogs-count",
           dataToSend: { draft, query },
         });
-
         if (draft) {
           setDrafts(formatedData);
+          console.log("Draft", formatedData);
         } else {
           setBlogs(formatedData);
+          console.log("Blogs", formatedData);
         }
       })
       .catch((err) => {
@@ -65,13 +66,19 @@ const ManageBlog = () => {
   let intervalId;
   const handleSearch = (e) => {
     let search = e.target.value;
-    if()
-    clearInterval(intervalId);
-    setTimeout(() => {
-      setQuery(search);
-    }, 800);
+    setQuery(search);
+    if (e.keyCode === 13 && search.length) {
+      setBlogs(null);
+      setDrafts(null);
+    }
   };
-  const handleChange = () => {};
+  const handleChange = (e) => {
+    if (!e.target.value.length) {
+      setQuery("");
+      setDrafts(null);
+      setBlogs(null);
+    }
+  };
 
   return (
     <>
