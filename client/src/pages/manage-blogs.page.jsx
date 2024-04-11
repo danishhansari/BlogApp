@@ -8,7 +8,10 @@ import { useEffect } from "react";
 import InPageNavigation from "../components/inpage-navigation.component";
 import NoDataMessage from "../components/nodata.component";
 import AnimationWrapper from "../common/page-animation";
-import ManagePublishedBlogCard from "../components/manage-blogcard.component";
+import {
+  ManagePublishedBlogCard,
+  ManageDraftBlogCard,
+} from "../components/manage-blogcard.component";
 
 const ManageBlog = () => {
   const [blogs, setBlogs] = useState(null);
@@ -118,8 +121,24 @@ const ManageBlog = () => {
             <NoDataMessage message={"No published blogs"} />
           )
         }
-
-        <h1>This is Draft Blog</h1>
+        {
+          // Draft blog
+          drafts === null ? (
+            <Loader />
+          ) : drafts.results.length ? (
+            <>
+              {drafts.results.map((draft, i) => {
+                return (
+                  <AnimationWrapper key={i} transition={{ delay: i * 0.04 }}>
+                    <ManageDraftBlogCard blog={draft} index={i + 1} />
+                  </AnimationWrapper>
+                );
+              })}
+            </>
+          ) : (
+            <NoDataMessage message={"No published blogs"} />
+          )
+        }{" "}
       </InPageNavigation>
     </>
   );
