@@ -12,11 +12,15 @@ import {
   ManagePublishedBlogCard,
   ManageDraftBlogCard,
 } from "../components/manage-blogcard.component";
+import LoadMoreDataBtn from "../components/load-more.component";
+import { useSearchParams } from "react-router-dom";
 
 const ManageBlog = () => {
   const [blogs, setBlogs] = useState(null);
   const [drafts, setDrafts] = useState(null);
   const [query, setQuery] = useState("");
+
+  const activeTab = useSearchParams()[0].get("tab");
 
   const {
     userAuth: { access_token },
@@ -102,7 +106,10 @@ const ManageBlog = () => {
         <i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"></i>
       </div>
 
-      <InPageNavigation routes={["Published Blogs", "Drafts"]}>
+      <InPageNavigation
+        routes={["Published Blogs", "Drafts"]}
+        defaultActiveIndex={activeTab !== "draft" ? 0 : 1}
+      >
         {
           // Published blog
           blogs === null ? (
@@ -118,6 +125,15 @@ const ManageBlog = () => {
                   </AnimationWrapper>
                 );
               })}
+
+              {/* <LoadMoreDataBtn
+                state={blogs}
+                fetchDataFn={getBlogs}
+                additionalParams={{
+                  draft: false,
+                  deletedDocCount: blogs.deletedDocCount,
+                }}
+              /> */}
             </>
           ) : (
             <NoDataMessage message={"No published blogs"} />
@@ -138,6 +154,15 @@ const ManageBlog = () => {
                   </AnimationWrapper>
                 );
               })}
+
+              {/* <LoadMoreDataBtn
+                state={drafts}
+                fetchDataFn={getBlogs}
+                additionalParams={{
+                  draft: true,
+                  deletedDocCount: drafts.deletedDocCount,
+                }}
+              /> */}
             </>
           ) : (
             <NoDataMessage message={"No published blogs"} />

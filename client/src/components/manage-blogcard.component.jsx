@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { getDay } from "../common/date";
 import { useContext, useState } from "react";
 import { UserContext } from "../App";
+import axios from "axios";
 
 const BlogStats = ({ stats }) => {
   return (
@@ -31,7 +32,7 @@ const BlogStats = ({ stats }) => {
   );
 };
 
-export const ManagePublishedBlogCard = ({ blog }) => {
+export const ManagePublishedBlogCard = ({ blog, index, setStatFunc }) => {
   const [showStats, setShowStats] = useState(false);
   const { banner, blog_id, title, publishedAt, activity } = blog;
   const {
@@ -70,7 +71,9 @@ export const ManagePublishedBlogCard = ({ blog }) => {
 
             <button
               className="pr-4 py-2 underline text-red"
-              onClick={(e) => deleteBlog(blog, access_token, e.target)}
+              onClick={(e) =>
+                deleteBlog(blog, access_token, e.target, setStatFunc)
+              }
             >
               Delete
             </button>
@@ -94,7 +97,7 @@ export const ManagePublishedBlogCard = ({ blog }) => {
 };
 
 const deleteBlog = (blog, access_token, target) => {
-  const { index, blog_id, setStatFunc } = blog;
+  const { index, blog_id, setStateFunc } = blog;
   target.setAttribute("disabled", true);
   axios
     .post(
@@ -110,24 +113,39 @@ const deleteBlog = (blog, access_token, target) => {
     )
     .then(({ data }) => {
       target.removeAttribute(false);
-      setStatFunc((prev) => {
-        const { deletedDocCount, totalDocs, results } = prev;
+      setStateFunc((prev) => {
+        let { deletedDocCount, totalDocs, results } = prev;
 
-        results.
+        results.splice(index, 1);
+
+        if (!deletedDocCount) {
+          deletedDocCount = 0;
+        }
+
+        if (!results.length && totalDocs - 1 > 0) {
+          return null;
+        }
+
+        return {
+          ...prev,
+          totalDocs: totalDocs - 1,
+          deletedDocCount: deletedDocCount + 1,
+        };
       });
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 
 export const ManageDraftBlogCard = ({ blog }) => {
-  const { title, description, blog_id, index } = blog;
+  let { title, description, blog_id, index } = blog;
 
   index++;
 
   const {
     userAuth: { access_token },
   } = useContext(UserContext);
-
-  const deleteBlog = blog;
 
   return (
     <>
