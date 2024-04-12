@@ -20,7 +20,7 @@ export const UserContext = createContext({});
 export const ThemeContext = createContext({});
 
 const darkThemePreference = () => {
-  window.matchMedia("(prefers-colors-schema): dark").matches;
+  window.matchMedia("(prefers-colors-schema: dark)").matches;
 };
 
 const App = () => {
