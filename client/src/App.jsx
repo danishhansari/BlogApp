@@ -45,7 +45,7 @@ const App = () => {
     } else {
       document.body.setAttribute("data-theme", theme);
     }
-  }, [theme]);
+  }, []);
 
   return (
     <Router>
