@@ -1,20 +1,23 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import logo from "../imgs/logo.png";
+import darkLogo from "../imgs/logo-dark.png";
+import lightLogo from "../imgs/logo-light.png";
 import AnimationWrapper from "../common/page-animation";
-import blogBanner from "../imgs/blog-banner.png";
 import { uploadImage } from "../common/aws.jsx";
 import { useContext, useEffect } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { EditorContext } from "../pages/editor.pages.jsx";
 import { tools } from "./tools.component";
 import axios from "axios";
+import lightBanner from "../imgs/blog-banner-light.png";
+import darkBanner from "../imgs/blog-banner-dark.png";
 
 import EditorJS from "@editorjs/editorjs";
-import { UserContext } from "../App.jsx";
+import { ThemeContext, UserContext } from "../App.jsx";
 
 const BlogEditor = () => {
   const { blog_id } = useParams();
   const navigate = useNavigate();
+  const { theme } = useContext(ThemeContext);
 
   const {
     blog,
@@ -154,7 +157,7 @@ const BlogEditor = () => {
     <>
       <nav className="navbar">
         <Link to={"/"} className="flex-none w-10">
-          <img src={logo} alt="Logo" />
+          <img src={theme === "light" ? darkLogo : lightLogo} alt="Logo" />
         </Link>
         <p className="max-md:hidden text-black line-clamp-1 w-full">
           {title.length ? title : "New Blog"}
@@ -176,7 +179,13 @@ const BlogEditor = () => {
             <div className="relative aspect-video hover:opacity-8 bg-white border-4 border-grey">
               <label htmlFor="uploadBanner">
                 <img
-                  src={banner ? banner : blogBanner}
+                  src={
+                    banner
+                      ? banner
+                      : theme === "light"
+                      ? lightBanner
+                      : darkBanner
+                  }
                   alt="blog-banner"
                   className="z-20"
                 />
@@ -193,7 +202,7 @@ const BlogEditor = () => {
             <textarea
               defaultValue={title}
               placeholder="Blog Title"
-              className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40"
+              className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40 bg-white"
               onKeyDown={handleTitleKeyDown}
               onChange={handleTitleChange}
             ></textarea>

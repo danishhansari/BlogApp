@@ -18,10 +18,17 @@ import ManageBlog from "./pages/manage-blogs.page";
 export const UserContext = createContext({});
 
 export const ThemeContext = createContext({});
+
+const darkThemePreference = () => {
+  window.matchMedia("(prefers-colors-schema): dark").matches;
+};
+
 const App = () => {
   const [userAuth, setUserAuth] = useState({});
 
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(() =>
+    darkThemePreference() ? "dark" : "light"
+  );
 
   useEffect(() => {
     let userInSession = lookInSession("user");
@@ -37,9 +44,9 @@ const App = () => {
         return themeInSession;
       });
     } else {
-      document.body.setAttribute("data-theme", themeInSession);
+      document.body.setAttribute("data-theme", theme);
     }
-  }, []);
+  }, [theme]);
 
   return (
     <Router>
