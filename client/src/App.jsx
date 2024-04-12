@@ -16,41 +16,58 @@ import Notification from "./pages/notifications.page";
 import ManageBlog from "./pages/manage-blogs.page";
 
 export const UserContext = createContext({});
+
+export const ThemeContext = createContext({});
 const App = () => {
   const [userAuth, setUserAuth] = useState({});
 
+  const [theme, setTheme] = useState("light");
+
   useEffect(() => {
     let userInSession = lookInSession("user");
+    let themeInSession = lookInSession("theme");
+
     userInSession
       ? setUserAuth(JSON.parse(userInSession))
       : setUserAuth({ access_token: null });
+
+    if (themeInSession) {
+      setTheme(() => {
+        document.body.setAttribute("data-theme", themeInSession);
+        return themeInSession;
+      });
+    } else {
+      document.body.setAttribute("data-theme", themeInSession);
+    }
   }, []);
 
   return (
     <Router>
-      <UserContext.Provider value={{ userAuth, setUserAuth }}>
-        <Routes>
-          <Route path="/" element={<Navbar />}>
-            <Route index element={<HomePage />} />
-            <Route path="signin" element={<UserAuthForm type="sign-in" />} />
-            <Route path="signup" element={<UserAuthForm type="sign-up" />} />
-            <Route path="search/:query" element={<SearchPage />} />
-            <Route path="user/:id" element={<ProfilePage />} />
-            <Route path="blog/:blog_id" element={<BlogPage />} />
-            <Route path="*" element={<PageNotFound />} />
-            <Route path="dashboard" element={<SideNav />}>
-              <Route path="blogs" element={<ManageBlog />} />
-              <Route path="notifications" element={<Notification />} />
+      <ThemeContext.Provider value={{ theme, setTheme }}>
+        <UserContext.Provider value={{ userAuth, setUserAuth }}>
+          <Routes>
+            <Route path="/" element={<Navbar />}>
+              <Route index element={<HomePage />} />
+              <Route path="signin" element={<UserAuthForm type="sign-in" />} />
+              <Route path="signup" element={<UserAuthForm type="sign-up" />} />
+              <Route path="search/:query" element={<SearchPage />} />
+              <Route path="user/:id" element={<ProfilePage />} />
+              <Route path="blog/:blog_id" element={<BlogPage />} />
+              <Route path="*" element={<PageNotFound />} />
+              <Route path="dashboard" element={<SideNav />}>
+                <Route path="blogs" element={<ManageBlog />} />
+                <Route path="notifications" element={<Notification />} />
+              </Route>
+              <Route path="settings" element={<SideNav />}>
+                <Route path="edit-profile" element={<EditProfile />} />
+                <Route path="change-password" element={<ChangePassword />} />
+              </Route>
             </Route>
-            <Route path="settings" element={<SideNav />}>
-              <Route path="edit-profile" element={<EditProfile />} />
-              <Route path="change-password" element={<ChangePassword />} />
-            </Route>
-          </Route>
-          <Route path="/editor" element={<Editor />} />
-          <Route path="/editor/:blog_id" element={<Editor />} />
-        </Routes>
-      </UserContext.Provider>
+            <Route path="/editor" element={<Editor />} />
+            <Route path="/editor/:blog_id" element={<Editor />} />
+          </Routes>
+        </UserContext.Provider>
+      </ThemeContext.Provider>
     </Router>
   );
 };

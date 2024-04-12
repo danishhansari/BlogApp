@@ -1,9 +1,11 @@
 import { useContext, useState, useEffect } from "react";
-import img from "../imgs/logo.png";
+import darkLogo from "../imgs/logo-dark.png";
+import lightLogo from "../imgs/logo-light.png";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { UserContext } from "../App";
+import { ThemeContext, UserContext } from "../App";
 import UserNavigation from "./user-navigation.component";
 import axios from "axios";
+import { storeInSession } from "../common/session";
 
 const Navbar = () => {
   const {
@@ -11,6 +13,8 @@ const Navbar = () => {
     setUserAuth,
     userAuth: { access_token, profile_img, new_notification_available },
   } = useContext(UserContext);
+
+  const { theme, setTheme } = useContext(ThemeContext);
 
   const navigate = useNavigate();
 
@@ -51,11 +55,23 @@ const Navbar = () => {
     }
   }, [access_token]);
 
+  const handleTheme = () => {
+    let newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+
+    document.body.setAttribute("data-theme", newTheme);
+    storeInSession("theme", newTheme);
+  };
+
   return (
     <>
       <nav className="navbar z-50">
         <Link to="/" className="flex-none w-10">
-          <img src={img} className="w-full" alt="Logo" />
+          <img
+            src={theme === "light" ? darkLogo : lightLogo}
+            className="w-full"
+            alt="Logo"
+          />
         </Link>
 
         <div
@@ -86,6 +102,15 @@ const Navbar = () => {
             <i className="fi fi-rr-file-edit"></i>
             <p>Write</p>
           </Link>
+
+          <button
+            onClick={handleTheme}
+            className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10"
+          >
+            <i
+              className={`text-2xl fi fi-rr-${theme === "light" ? "moon-stars" : "sun"}`}
+            ></i>
+          </button>
 
           {access_token ? (
             <>
